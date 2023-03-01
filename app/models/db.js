@@ -24,7 +24,7 @@ const User = {
         if (rows.length) {
             return rows[0];
         }
-        throw new Error('No se encontró ningún usuario con el nombre especificado');
+        throw new Error('User with name: ' + name + ' -> Not found');
     },
 
     async findById(id) {
@@ -35,7 +35,7 @@ const User = {
         if (rows.length) {
             return rows[0];
         }
-        throw new Error('No se encontró ningún usuario con el ID especificado');
+        throw new Error('User with id: ' + id + ' -> Not found');
     },
 
     async create(name, email, password) {
