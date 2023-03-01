@@ -28,7 +28,6 @@ exports.logIn = async (req, res) => {
   try {
     const { name, password } = req.body;
     const user = await User.findByName(name);
-    console.log(user);
     if(user.pass != password) {
       error_type = 1;
       throw new Error('Password not mach'); 
