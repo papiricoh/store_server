@@ -17,7 +17,7 @@ connection.connect(error => {
 
 const User = {
     async findById(id) {
-        const [rows, fields] = await connection.query(
+        const [rows, fields] = await connection.promise().query(
         `SELECT * FROM users WHERE id = ?`, 
         [id]
         );
@@ -28,7 +28,7 @@ const User = {
     },
 
     async create(name, email, password) {
-        const [result] = await connection.query(
+        const [result] = await connection.promise().query(
         `INSERT INTO users (name, email, password) VALUES (?, ?, ?)`,
         [name, email, password]
         );
