@@ -15,4 +15,25 @@ connection.connect(error => {
     console.log("Successfully connected to the database.");
 });
 
-module.exports = connection;
+const User = {
+    async findById(id) {
+        const [rows, fields] = await connection.query(
+        `SELECT * FROM users WHERE id = ?`, 
+        [id]
+        );
+        if (rows.length) {
+            return rows[0];
+        }
+        throw new Error('No se encontró ningún usuario con el ID especificado');
+    },
+
+    async create(name, email, password) {
+        const [result] = await connection.query(
+        `INSERT INTO users (name, email, password) VALUES (?, ?, ?)`,
+        [name, email, password]
+        );
+        return { id: result.insertId, name, email };
+    }
+};
+  
+  module.exports = User;
