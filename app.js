@@ -1,6 +1,10 @@
 const express = require('express');
 const app = express();
 const routes = require('./app/routes');
+const bodyParser = require('body-parser');
+
+app.use(bodyParser.json()); // support json encoded bodies
+app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
 // Configuración de middlewares y otros ajustes de la aplicación
 

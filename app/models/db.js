@@ -16,6 +16,17 @@ connection.connect(error => {
 });
 
 const User = {
+    async findByName(name) {
+        const [rows, fields] = await connection.promise().query(
+        `SELECT * FROM users WHERE name = ?`, 
+        [name]
+        );
+        if (rows.length) {
+            return rows[0];
+        }
+        throw new Error('No se encontró ningún usuario con el nombre especificado');
+    },
+
     async findById(id) {
         const [rows, fields] = await connection.promise().query(
         `SELECT * FROM users WHERE id = ?`, 

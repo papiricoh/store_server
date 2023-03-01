@@ -22,3 +22,23 @@ exports.createUser = async (req, res) => {
     res.status(500).json({ message: 'Error al crear usuario' });
   }
 };
+
+exports.logIn = async (req, res) => {
+  var error_type = 0;
+  try {
+    const { name, password } = req.body;
+    const user = await User.findByName(name);
+    console.log(user);
+    if(user.pass != password) {
+      error_type = 1;
+      throw new Error('Password not mach'); 
+    }
+    res.status(200).json(user.identifier); //Returns identifier
+  } catch (err) {
+    if(error_type == 1) {
+      res.status(500).json({ message: 'Password not mach' });
+    }else {
+      res.status(500).json({ message: 'Error al buscar usuario' });
+    }
+  }
+};
