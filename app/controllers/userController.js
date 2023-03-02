@@ -22,7 +22,7 @@ exports.registerUser = async (req, res) => {
       const user = await User.register(name, email, password);
       res.status(201).json(user);
     }
-  } catch (err) {
+  } catch (error) {
     res.status(500).json({ message: 'Error creating user' });
   }
 };
