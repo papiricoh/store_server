@@ -19,7 +19,6 @@ async function generateIdentifier(name, email) {
 async function comparePasswords(plaintext, ecrypted) {
   try {
     const match = await bcrypt.compare(plaintext, ecrypted);
-    console.log(match);
     return match;
   } catch (err) {
     throw new Error('Error while hashing password');
