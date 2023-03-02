@@ -16,7 +16,7 @@ exports.getUserById = async (req, res) => {
 exports.registerUser = async (req, res) => {
   try {
     const { name, email, password } = req.body;
-    if (email != User.findByEmail(email).email || name != User.findByName(name).name ) {
+    if (name != User.findByName(name).name || email != User.findByEmail(email).email) {
       throw new Error('User Exists'); 
     } else {
       const user = await User.register(name, email, password);
