@@ -55,7 +55,7 @@ const User = {
             `INSERT INTO users (identifier, name, email, pass) VALUES (?, ?, ?, ?)`,
             [identifier, name, email, password]
             );
-            return { id: result.insertId, name, email };
+            return { identifier, name, email };
         } catch (error) {
             return new Error('User with email: ' + email + ' or User with name: ' + name + ' -> Already Exists');
         }
