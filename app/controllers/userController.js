@@ -1,6 +1,7 @@
 // Importar modelo de usuario
 const User = require('../models/db');
 const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 async function generateIdentifier(name, email) {
   const plaintextIdentifier = name + email;
@@ -13,6 +14,16 @@ async function generateIdentifier(name, email) {
       }
     });
   });
+}
+
+async function comparePasswords(plaintext, ecrypted) {
+  try {
+    const match = await bcrypt.compare(plaintext, ecrypted);
+    console.log(match);
+    return match;
+  } catch (err) {
+    throw new Error('Error while hashing password');
+  }
 }
 
 // Controlador para obtener información de un usuario por ID
@@ -35,7 +46,9 @@ exports.registerUser = async (req, res) => {
     } else {
       const identifier = await generateIdentifier(name, email).then((hash) => { return hash }).catch((err) => {throw new Error('Failed Cryptography'); });
       
-      const user = await User.register( identifier, name, email, password);
+      const encryptedPassword = await bcrypt.hash(password, saltRounds);
+
+      const user = await User.register( identifier, name, email, encryptedPassword);
       if(user instanceof Error) {
         throw new Error(user.message)
       }
@@ -51,7 +64,7 @@ exports.logIn = async (req, res) => {
   try {
     const { name, password } = req.body;
     const user = await User.findByName(name);
-    if(user.pass != password) {
+    if(!await comparePasswords(password, user.pass)) {
       error_type = 1;
       throw new Error('Password not mach'); 
     }
