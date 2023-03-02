@@ -57,7 +57,7 @@ const User = {
             );
             return { id: result.insertId, name, email };
         } catch (error) {
-            console.log(error);
+            return new Error('User with name: ' + email + ' -> Already Exists');
         }
     }
 };
