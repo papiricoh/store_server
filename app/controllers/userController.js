@@ -1,5 +1,19 @@
 // Importar modelo de usuario
 const User = require('../models/db');
+const bcrypt = require('bcrypt');
+
+async function generateIdentifier(name, email) {
+  const plaintextIdentifier = name + email;
+  return new Promise((resolve, reject) => {
+    bcrypt.hash(plaintextIdentifier, 10, function(err, hash) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(hash);
+      }
+    });
+  });
+}
 
 // Controlador para obtener información de un usuario por ID
 exports.getUserById = async (req, res) => {
@@ -16,13 +30,15 @@ exports.getUserById = async (req, res) => {
 exports.registerUser = async (req, res) => {
   try {
     const { name, email, password } = req.body;
-    if (name != User.findByName(name).name || email != User.findByEmail(email).email) {
+    if (name == await User.findByName(name).name || email == await User.findByEmail(email).email) {
       throw new Error('User Exists'); 
     } else {
-      const user = await User.register(name, email, password);
+      const identifier = await generateIdentifier(name, email).then((hash) => { return hash }).catch((err) => {throw new Error('Failed Cryptography'); });
+      
+      const user = await User.register( identifier, name, email, password);
       res.status(201).json(user);
     }
-  } catch (error) {
+  } catch (err) {
     res.status(500).json({ message: 'Error creating user' });
   }
 };
