@@ -37,7 +37,7 @@ exports.registerUser = async (req, res) => {
       
       const user = await User.register( identifier, name, email, password);
       if(user instanceof Error) {
-        throw new Error('User with name: ' + email + ' -> Already Exists')
+        throw new Error(user.message)
       }
       res.status(201).json(user);
     }
