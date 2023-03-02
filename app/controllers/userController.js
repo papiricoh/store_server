@@ -55,7 +55,7 @@ exports.logIn = async (req, res) => {
       error_type = 1;
       throw new Error('Password not mach'); 
     }
-    res.status(200).json(user.identifier); //Returns identifier
+    res.status(200).json({ identifier: user.identifier}); //Returns identifier
   } catch (err) {
     if(error_type == 1) {
       res.status(500).json({ message: 'Password not mach' });
