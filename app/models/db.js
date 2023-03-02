@@ -49,12 +49,16 @@ const User = {
         return new Error('User with name: ' + email + ' -> Not found');
     },
 
-    async register(name, email, password) {
-        const [result] = await connection.promise().query(
-        `INSERT INTO users (name, email, pass) VALUES (?, ?, ?)`,
-        [name, email, password]
-        );
-        return { id: result.insertId, name, email };
+    async register(identifier, name, email, password) {
+        try {
+            const [result] = await connection.promise().query(
+            `INSERT INTO users (identifier, name, email, pass) VALUES (?, ?, ?, ?)`,
+            [identifier, name, email, password]
+            );
+            return { id: result.insertId, name, email };
+        } catch (error) {
+            console.log(error);
+        }
     }
 };
   
