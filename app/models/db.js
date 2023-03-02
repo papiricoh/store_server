@@ -38,9 +38,20 @@ const User = {
         throw new Error('User with id: ' + id + ' -> Not found');
     },
 
-    async create(name, email, password) {
+    async findByEmail(email) {
+        const [rows, fields] = await connection.promise().query(
+        `SELECT * FROM users WHERE email = ?`, 
+        [email]
+        );
+        if (rows.length) {
+            return rows[0];
+        }
+        throw new Error('User with name: ' + email + ' -> Not found');
+    },
+
+    async register(name, email, password) {
         const [result] = await connection.promise().query(
-        `INSERT INTO users (name, email, password) VALUES (?, ?, ?)`,
+        `INSERT INTO users (name, email, pass) VALUES (?, ?, ?)`,
         [name, email, password]
         );
         return { id: result.insertId, name, email };

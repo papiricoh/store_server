@@ -13,11 +13,15 @@ exports.getUserById = async (req, res) => {
 };
 
 // Controlador para crear un nuevo usuario
-exports.createUser = async (req, res) => {
+exports.registerUser = async (req, res) => {
   try {
     const { name, email, password } = req.body;
-    const user = await User.create(name, email, password);
-    res.status(201).json(user);
+    if (email != User.findByEmail(email).email || name != User.findByName(name).name ) {
+      throw new Error('User Exists'); 
+    } else {
+      const user = await User.register(name, email, password);
+      res.status(201).json(user);
+    }
   } catch (err) {
     res.status(500).json({ message: 'Error creating user' });
   }
