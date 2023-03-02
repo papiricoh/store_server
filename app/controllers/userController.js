@@ -22,7 +22,7 @@ exports.getUserById = async (req, res) => {
     const user = await User.findById(id);
     res.status(200).json(user);
   } catch (err) {
-    res.status(500).json({ message: 'User with id: ' + req.params.id + ' -> Not found' });
+    res.status(500).json({ message: err.message });
   }
 };
 
@@ -36,10 +36,13 @@ exports.registerUser = async (req, res) => {
       const identifier = await generateIdentifier(name, email).then((hash) => { return hash }).catch((err) => {throw new Error('Failed Cryptography'); });
       
       const user = await User.register( identifier, name, email, password);
+      if(user instanceof Error) {
+        throw new Error('User with name: ' + email + ' -> Already Exists')
+      }
       res.status(201).json(user);
     }
   } catch (err) {
-    res.status(500).json({ message: 'Error creating user' });
+    res.status(500).json({ message: err.message });
   }
 };
 
