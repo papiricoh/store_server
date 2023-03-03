@@ -59,7 +59,28 @@ const User = {
         } catch (error) {
             return new Error('User with email: ' + email + ' or User with name: ' + name + ' -> Already Exists');
         }
-    }
+    },
+
+    async getAllProducts() {
+        const [rows, fields] = await connection.promise().query(
+        `SELECT * FROM products`);
+        if (rows.length) {
+            return rows;
+        }
+        return new Error('Products: -> Not found');
+    },
+
+    async getProductsByCategory(category) {
+        const [rows, fields] = await connection.promise().query(
+        `SELECT * FROM products WHERE id_category = (SELECT id FROM categories WHERE name = ?)`, 
+        [category]
+        );
+        if (rows.length) {
+            return rows;
+        }
+        return new Error('Category with name: ' + category + ' -> Not found');
+    },
+
 };
   
   module.exports = User;
