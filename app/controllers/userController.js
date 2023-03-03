@@ -76,3 +76,23 @@ exports.logIn = async (req, res) => {
     }
   }
 };
+
+
+exports.getAllProducts = async (req, res) => {
+  try {
+    const products = await User.getAllProducts();
+    res.status(200).json(products); //Returns identifier
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+exports.getProductsByCategory = async (req, res) => {
+  try {
+    const { category } = req.params;
+    const products = await User.getProductsByCategory(category);
+    res.status(200).json(products);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
