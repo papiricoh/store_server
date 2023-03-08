@@ -81,6 +81,16 @@ const User = {
         return new Error('Category with name: ' + category + ' -> Not found');
     },
 
+    async getProductsBySearch(search) {
+        const [rows, fields] = await connection.promise().query(
+        `SELECT * FROM products WHERE name LIKE '%` + search + `%'`
+        );
+        if (rows.length) {
+            return rows;
+        }
+        return new Error('Search with name: ' + search + ' -> Not found');
+    },
+
 };
   
   module.exports = User;

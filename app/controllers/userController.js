@@ -96,3 +96,13 @@ exports.getProductsByCategory = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+exports.getProductsBySearch = async (req, res) => {
+  try {
+    const { search } = req.params;
+    const products = await User.getProductsBySearch(search);
+    res.status(200).json(products);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
