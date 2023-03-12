@@ -1,6 +1,7 @@
 // Importar modelo de usuario
 const User = require('../models/db');
 const bcrypt = require('bcrypt');
+const { getProductById } = require('../models/db');
 const saltRounds = 10;
 
 async function generateIdentifier(name, email) {
@@ -102,6 +103,24 @@ exports.getProductsBySearch = async (req, res) => {
     const { search } = req.params;
     const products = await User.getProductsBySearch(search);
     res.status(200).json(products);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+exports.addToCart = async (req, res) => {
+  try {
+    const { identifier, productId, cuantity } = req.body;
+    await User.checkIdentifier(identifier); //Check Identifier
+    
+    //Check disponible cuantity
+    const productCuantity = getProductById(productId).cuantity;
+    if (productCuantity - cuantity < 0) {
+      res.status(500).json({ message: "Not enough cuantity of product: " + productId });
+    }
+    
+    const result = await User.addToCart(identifier, productId, cuantity);
+    res.status(201).json({ message: "Success", result });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

@@ -27,6 +27,17 @@ const User = {
         return new Error('User with name: ' + name + ' -> Not found');
     },
 
+    async checkIdentifier(identifier) {
+        const [rows, fields] = await connection.promise().query(
+        `SELECT * FROM users WHERE identifier = ?`, 
+        [identifier]
+        );
+        if (rows.length) {
+            return rows[0];
+        }
+        return new Error('User with identifier: ' + identifier + ' -> Not exists');
+    },
+
     async findById(id) {
         const [rows, fields] = await connection.promise().query(
         `SELECT * FROM users WHERE id = ?`, 
@@ -81,6 +92,18 @@ const User = {
         return new Error('Category with name: ' + category + ' -> Not found');
     },
 
+
+    async getProductById(id) {
+        const [rows, fields] = await connection.promise().query(
+        `SELECT * FROM products WHERE id = ?`, 
+        [id]
+        );
+        if (rows.length) {
+            return rows;
+        }
+        return new Error('Product with id: ' + id + ' -> Not found');
+    },
+
     async getProductsBySearch(search) {
         const [rows, fields] = await connection.promise().query(
         `SELECT * FROM products WHERE name LIKE '%` + search + `%'`
@@ -91,6 +114,18 @@ const User = {
         return new Error('Search with name: ' + search + ' -> Not found');
     },
 
+    async addToCart(identifier, productId, cuantity) {
+        try {
+            const [result] = await connection.promise().query(
+            `INSERT INTO shopping_cart (id_product, id_user, cuantity) VALUES (?, (SELECT id FROM users WHERE identifier = ?), ?)`,
+            [productId, identifier, cuantity]
+            );
+            return { identifier, productId, cuantity };
+        } catch (error) {
+            return new Error('User with identifier: ' + identifier + ' and product with id: ' + productId + ' -> Coudn\'be added');
+        }
+    },
+
 };
   
-  module.exports = User;
+module.exports = User;

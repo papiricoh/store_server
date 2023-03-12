@@ -8,5 +8,6 @@ router.get('/products/:category', userController.getProductsByCategory);
 router.get('/products/search/:search', userController.getProductsBySearch);
 router.post('/login', userController.logIn);
 router.post('/register', userController.registerUser);
+router.post('/addToCart', userController.addToCart);
 
 module.exports = router;
