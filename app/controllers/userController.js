@@ -108,6 +108,16 @@ exports.getProductsBySearch = async (req, res) => {
   }
 };
 
+exports.getProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const product = await User.getProductById(id);
+    res.status(200).json(product);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
 exports.addToCart = async (req, res) => {
   try {
     const { identifier, productId, cuantity } = req.body;
@@ -120,7 +130,7 @@ exports.addToCart = async (req, res) => {
     }
     
     const result = await User.addToCart(identifier, productId, cuantity);
-    res.status(201).json({ message: "Success", result });
+    res.status(201).json({ message: "Success" });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

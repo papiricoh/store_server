@@ -99,7 +99,7 @@ const User = {
         [id]
         );
         if (rows.length) {
-            return rows;
+            return rows[0];
         }
         return new Error('Product with id: ' + id + ' -> Not found');
     },
