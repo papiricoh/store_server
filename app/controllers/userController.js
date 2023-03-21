@@ -60,24 +60,25 @@ exports.registerUser = async (req, res) => {
 };
 
 exports.logIn = async (req, res) => {
-  var error_type = 0;
   try {
     const { email, password } = req.body;
     const user = await User.findByEmail(email);
-    if(!await comparePasswords(password, user.pass)) {
-      error_type = 1;
-      throw new Error('Password not mach'); 
+    if (!user) {
+      res.status(404).json({ message: 'Usuario no encontrado' });
+      return;
     }
-    res.status(200).json({ identifier: user.identifier}); //Returns identifier
+
+    const isPasswordValid = await comparePasswords(password, user.pass);
+    if (!isPasswordValid) {
+      res.status(401).json({ message: 'Contraseña incorrecta' });
+      return;
+    }
+    res.status(200).json({ identifier: user.identifier }); //Returns identifier
   } catch (err) {
-    if(error_type == 1) {
-      res.status(500).json({ message: 'Password not mach' });
-    }else {
-      res.status(500).json({ message: 'Error al buscar usuario' });
-    }
+    console.error(err);
+    res.status(500).json({ message: 'Error al buscar usuario' });
   }
 };
-
 
 exports.getAllProducts = async (req, res) => {
   try {
