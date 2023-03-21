@@ -62,8 +62,8 @@ exports.registerUser = async (req, res) => {
 exports.logIn = async (req, res) => {
   var error_type = 0;
   try {
-    const { name, password } = req.body;
-    const user = await User.findByName(name);
+    const { email, password } = req.body;
+    const user = await User.findByEmail(email);
     if(!await comparePasswords(password, user.pass)) {
       error_type = 1;
       throw new Error('Password not mach'); 
