@@ -22,6 +22,7 @@ async function comparePasswords(plaintext, ecrypted) {
     const match = await bcrypt.compare(plaintext, ecrypted);
     return match;
   } catch (err) {
+    console.error('Error while hashing password:', err);
     throw new Error('Error while hashing password');
   }
 }
@@ -70,12 +71,12 @@ exports.logIn = async (req, res) => {
 
     const isPasswordValid = await comparePasswords(password, user.pass);
     if (!isPasswordValid) {
+      console.log('Incorrect');
       res.status(401).json({ message: 'Contraseña incorrecta' });
       return;
     }
     res.status(200).json({ identifier: user.identifier }); //Returns identifier
   } catch (err) {
-    console.error(err);
     res.status(500).json({ message: 'Error al buscar usuario' });
   }
 };

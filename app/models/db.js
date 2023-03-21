@@ -57,6 +57,7 @@ const User = {
         if (rows.length) {
             return rows[0];
         }
+        console.error(email + ' User not found');
         return new Error('User with name: ' + email + ' -> Not found');
     },
 
